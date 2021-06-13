@@ -35,6 +35,9 @@ export class UsersController {
   }
 
   public upload(request: SessionRequest, response: Response) {
+    if (request.file && request.file.mimetype !== 'image/png' && request.file.mimetype !== 'image/jpg' && request.file.mimetype !== 'image/jpeg') {
+      return response.status(400).send({statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only image are allowed!'});
+    }
     if (request.file) {
       response.send({
         filename: request.file.originalname,
