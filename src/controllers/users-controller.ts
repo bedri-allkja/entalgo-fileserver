@@ -5,7 +5,7 @@ import * as path from "path";
 import * as uuid from "uuid";
 import { Environment, HttpResponseStatus } from "../environment";
 import { SessionRequest } from '../middlewares/session-middleware';
-
+import { UserModel } from "../model/user-model";
 export class UsersController {
   public router: Router;
   public root: string;
@@ -30,21 +30,32 @@ export class UsersController {
     });
 
     this.router.put("/", this.env.session.checkAuthentication(), this.uploadMiddleware.single("file"),
-      (request: SessionRequest, response) => this.upload(request, response)
+      (request: SessionRequest, response, next) => this.upload(request, response, next)
     );
   }
 
-  public upload(request: SessionRequest, response: Response) {
-    if (request.file && request.file.mimetype !== 'image/png' && request.file.mimetype !== 'image/jpg' && request.file.mimetype !== 'image/jpeg') {
-      return response.status(400).send({statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only image are allowed!'});
-    }
-    if (request.file) {
-      response.send({
-        filename: request.file.originalname,
-        stored: request.file.filename
-      });
-    } else {
-      response.sendStatus(HttpResponseStatus.MISSING_PARAMS);
+  public async upload(request: SessionRequest, response: Response, next: NextFunction) {
+    try {
+      if (request.file && request.file.mimetype !== 'image/png' && request.file.mimetype !== 'image/jpg' && request.file.mimetype !== 'image/jpeg') {
+        return response.status(400).send({ statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only image are allowed!' });
+      }
+      if (request.file) {
+        await UserModel.update({
+          profile_picture: request.file.filename
+        }, {
+          where: {
+            id: request.session.idUser
+          }
+        });
+        response.send({
+          filename: request.file.originalname,
+          stored: request.file.filename
+        });
+      } else {
+        response.sendStatus(HttpResponseStatus.MISSING_PARAMS);
+      }
+    } catch (error) {
+      next(error);
     }
   }
 }
