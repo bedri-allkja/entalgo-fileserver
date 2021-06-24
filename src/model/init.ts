@@ -7,6 +7,7 @@ import { CompanyModel } from "./company-model";
 import { EmailModel } from "./email-model";
 import { TechnologyModel } from "./technology-model";
 import { PhoneModel } from "./phone-model";
+import { CsvFilesModel } from "./csv-files-model";
 
 export const initMySQLModels = (connection: Sequelize) => {
   CompanyModel.initModel(connection);
@@ -16,6 +17,7 @@ export const initMySQLModels = (connection: Sequelize) => {
   EmailModel.initModel(connection);
   TechnologyModel.initModel(connection);
   PhoneModel.initModel(connection);
+  CsvFilesModel.initModel(connection);
 
   CompanyModel.initAssociations();
   UserModel.initAssociations();
@@ -23,4 +25,5 @@ export const initMySQLModels = (connection: Sequelize) => {
   EmailModel.initAssociations();
   TechnologyModel.initAssociations();
   PhoneModel.initAssociations();
+  CsvFilesModel.initAssociations();
 };
