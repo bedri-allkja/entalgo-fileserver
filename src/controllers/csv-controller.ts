@@ -39,6 +39,7 @@ export class CSVController {
 
   public async upload(request: SessionRequest, response: Response, next: NextFunction) {
     try {
+      console.log('content type log: ', request.headers['content-type']);
       if (request.file && request.file.mimetype !== 'text/csv') {
         return response.status(400).send({statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only CSV file is allowed!'});
       }

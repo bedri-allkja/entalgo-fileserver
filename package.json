@@ -12,6 +12,7 @@
     "start-debug": "node --inspect ./dist/main-fs.js",
     "start-nodemon-debug": "nodemon --inspect ./dist/main-fs.js",
     "watch": "tsc -w",
+    "watch:fileserver": "nodemon --watch dist --exec 'node dist/main-fs.js'",
     "watch-debug": "concurrently -k \"npm run watch\" \"npm run start-nodemon-debug\""
   },
   "repository": {
@@ -38,21 +39,21 @@
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.12",
     "@types/jest": "^27.0.1",
-    "@types/jsonwebtoken": "^8.5.4",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/lodash": "^4.14.172",
-    "@types/mime-types": "^2.1.0",
+    "@types/mime-types": "^2.1.1",
     "@types/multer": "^1.4.7",
-    "@types/node": "^16.6.1",
+    "@types/node": "^16.7.3",
     "@types/read-chunk": "^3.1.0",
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.1",
     "concurrently": "^6.2.1",
-    "jest": "^27.0.6",
-    "supertest": "^6.1.5",
-    "ts-jest": "^27.0.4",
-    "ts-node": "^10.2.0",
+    "jest": "^27.1.0",
+    "supertest": "^6.1.6",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
     "tslint": "^6.1.3",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.2"
   },
   "dependencies": {
     "cors": "^2.8.5",
