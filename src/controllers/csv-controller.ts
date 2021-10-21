@@ -17,6 +17,7 @@ export class CSVController {
     this.root = "csv";
     this.router = express.Router();
     this.filesPath = path.join(this.env.config.fileserver.root, this.env.config.fileserver.folders["csv"]);
+    console.log('Test 1');
     this.uploadMiddleware = multer({
       limits: env.config.limits,
       storage: multer.diskStorage({
@@ -29,6 +30,7 @@ export class CSVController {
         }
       })
     });
+    console.log('Test 2');
     this.router.put(
       "/",
       this.env.session.checkAuthentication(),
