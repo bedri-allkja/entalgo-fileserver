@@ -17,7 +17,7 @@ export class CSVController {
     this.root = "csv";
     this.router = express.Router();
     this.filesPath = path.join(this.env.config.fileserver.root, this.env.config.fileserver.folders["csv"]);
-    console.log('Test 1');
+    
     this.uploadMiddleware = multer({
       limits: env.config.limits,
       storage: multer.diskStorage({
@@ -30,7 +30,7 @@ export class CSVController {
         }
       })
     });
-    console.log('Test 2');
+    
     this.router.put(
       "/",
       this.env.session.checkAuthentication(),
@@ -47,7 +47,7 @@ export class CSVController {
 //     }
     
      console.log('content type log: ', request.headers['content-type']);
-      if (request.file && request.file.mimetype !== 'text/csv') {
+      if (request.file) {
         return response.status(400).send({statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only CSV file is allowed!'});
       }
       if (request.file) {
