@@ -17,7 +17,7 @@ export class App {
     this.env = new Environment();
     this.express = express();
     this.express.use(express.json({limit: this.env.config.bodyParserLimit}));
-    this.express.use(express.urlencoded({ extended: true }));
+    //this.express.use(express.urlencoded({ extended: true }));
     this.express.use(cors());
     this.express.use(express.static(this.env.config.fileserver.root));
     const users = new UsersController(this.env);

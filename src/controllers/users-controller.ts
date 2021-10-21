@@ -37,7 +37,8 @@ export class UsersController {
   public async upload(request: SessionRequest, response: Response, next: NextFunction) {
     try {
       if (request.file && request.file.mimetype !== 'image/png' && request.file.mimetype !== 'image/jpg' && request.file.mimetype !== 'image/jpeg') {
-        return response.status(400).send({ statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only image are allowed!' });
+        //return response.status(400).send({ statuCode: HttpResponseStatus.MISSING_PARAMS, message: 'Only image are allowed!' });
+        return response.status(400).send({ status: { code: 400, message: 'WARNING' }, body: { data: 'Only images are allowed!' } });
       }
       if (request.file) {
         await UserModel.update({
@@ -47,12 +48,17 @@ export class UsersController {
             id: request.session.idUser
           }
         });
-        response.send({
+        /* response.send({
           filename: request.file.originalname,
           stored: request.file.filename
-        });
+        }); */
+        response.json({ status: { code: 200, message: 'SUCCESS' }, body: { data: {
+          filename: request.file.originalname,
+          stored: request.file.filename
+        } } });
       } else {
-        response.sendStatus(HttpResponseStatus.MISSING_PARAMS);
+        //response.sendStatus(HttpResponseStatus.MISSING_PARAMS);
+        response.json({ status: { code: 400, message: 'WARNING' }, body: { data: "MISSING PARAMS" } });
       }
     } catch (error) {
       next(error);
