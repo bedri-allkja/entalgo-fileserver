@@ -47,7 +47,7 @@ export class CSVController {
     //     }
 
     console.log('content type log: ', request.headers['content-type']);
-    if (request.file) {
+    if (request.file && request.file.mimetype !== 'text/csv') {
       return response.status(400).send({ status: { code: 400, message: 'WARNING' }, body: { data: 'Only CSV file is allowed!' } });
     }
     if (request.file) {
