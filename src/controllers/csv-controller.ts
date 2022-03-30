@@ -63,7 +63,6 @@ export class CSVController {
       const createdFile = await CsvFilesModel.create(newCsvFile);
       response.json({ status: { code: 200, message: 'SUCCESS' }, body: { data: createdFile } });
     } else {
-      //response.sendStatus(HttpResponseStatus.MISSING_PARAMS);
       response.json({ status: { code: 400, message: 'WARNING' }, body: { data: "MISSING PARAMS" } });
     }
   }
