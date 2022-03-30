@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Sequelize } from "sequelize/types";
+import { Sequelize } from "sequelize";
 import { OrganizationModel } from "./organization-model";
 import { UserModel } from "./user-model";
 import { PersonModel } from "./person-model";

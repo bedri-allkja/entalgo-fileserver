@@ -3,9 +3,9 @@ import { Router, Response, NextFunction } from "express";
 import * as multer from "multer";
 import * as path from "path";
 import * as uuid from "uuid";
-import { Environment, HttpResponseStatus } from "../environment";
+import { Environment } from "../environment";
 import { SessionRequest } from "../middlewares/session-middleware";
-import { CsvFileAttributes, CsvFilesModel } from "../model/csv-files-model";
+import { CsvFilesModel } from "../model/csv-files-model";
 
 export class CSVController {
   public router: Router;
@@ -40,19 +40,12 @@ export class CSVController {
   }
 
   public async upload(request: SessionRequest, response: Response, next: NextFunction) {
-    //     try {
-
-    //     } catch (error) {
-    //       next(error);
-    //     }
-
-    console.log('content type log: ', request.headers['content-type']);
     if (request.file && request.file.mimetype !== 'text/csv') {
       return response.status(400).send({ status: { code: 400, message: 'WARNING' }, body: { data: 'Only CSV file is allowed!' } });
     }
     if (request.file) {
       // store data on database
-      const newCsvFile: CsvFileAttributes = {
+      const newCsvFile = {
         id: request.file.filename.substr(0, request.file.filename.lastIndexOf('.')),
         organisation_id: request.session.idOrganization,
         user_id: request.session.idUser,

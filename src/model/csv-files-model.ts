@@ -4,16 +4,6 @@ import { Model } from "sequelize";
 import { OrganizationModel } from "./organization-model";
 import { UserModel } from "./user-model";
 
-
-export interface CsvFileAttributes {
-  id: string;
-  organisation_id: string;
-  user_id: string;
-  file_name: string;
-  file_size: number;
-  file_type: string;
-}
-
 export class CsvFilesModel extends Model {
   id: string;
   organisation_id: string;

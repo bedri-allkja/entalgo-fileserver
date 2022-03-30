@@ -3,7 +3,7 @@ import { Router, Response, NextFunction } from "express";
 import * as multer from "multer";
 import * as path from "path";
 import * as uuid from "uuid";
-import { Environment, HttpResponseStatus } from "../environment";
+import { Environment } from "../environment";
 import { SessionRequest } from '../middlewares/session-middleware';
 import { UserModel } from "../model/user-model";
 export class UsersController {
