@@ -1,0 +1,200 @@
+# Name of the application.
+applicationName: "fileserver"
+
+namespaceOverride: ""
+
+# These labels will be added on all resources, and you can add additional labels from below on individual resource
+labels:
+  group: com.stakater.platform
+  team: stakater
+
+deployment:
+  # Replicas to be created
+  replicas: 1
+
+  # Secrets used to pull image
+  imagePullSecrets: ""
+
+  # If want to mount Envs from configmap or secret
+  #envFrom:
+  #  production-cm:
+  #    type: configmap
+  #    nameSuffix: my-configmap
+  #  logging-config:
+  #    type: configmap
+  #    name: your-configmap
+  #  postgres-config:
+  #    type: secret
+  #    nameSuffix: postgres
+
+  # Environment variables to be passed to the app container
+  #env:
+  #  ENVIRONMENT:
+  #     value: "dev"
+
+  # Volumes to be added to the pod
+  volumes:
+    fileserver-config:
+      secret:
+        secretName: fileserver-config
+  #  config-volume:
+  #    configMap:
+  #      name: configmap-name
+  #  configmap-volume:
+  #    configMap:
+  #      name: '{{ template "application.name" . }}-configmap-nameSuffix'
+  #  secret-volume:
+  #    secret:
+  #      secretName: secret-name
+  #  volume-name:
+  #    emptyDir: {}
+  #  persistent-volume-name:
+  #    persistentVolumeClaim:
+  #      claimName: claim-name
+
+  # Mount path for Volumes
+  volumeMounts:
+    fileserver-config:
+      mountPath: /home/entalgo-fileserver/fileserver-config
+  #    volume-name:
+  #       mountPath: /path1
+
+  # Image of the app container
+  image:
+    repository: 381097678762.dkr.ecr.eu-west-1.amazonaws.com/entalgo-fileserver
+    tag: d2c2ea582112d99ecd269218c4204937465f925c
+    pullPolicy: IfNotPresent
+
+  # Readiness and Liveness probes
+  #probes:
+  #  readinessProbe:
+  #    failureThreshold: 3
+  #    periodSeconds: 10
+  #    successThreshold: 1
+  #    timeoutSeconds: 1
+  #    initialDelaySeconds: 10
+  #    httpGet:
+  #      path: /path
+  #      port: 8080
+  #  livenessProbe:
+  #    failureThreshold: 3
+  #    periodSeconds: 10
+  #    successThreshold: 1
+  #    timeoutSeconds: 1
+  #    initialDelaySeconds: 10
+  #    httpGet:
+  #      path: /path
+  #      port: 8080
+
+  # Resources to be defined for pod
+  #resources:
+  #  limits:
+  #    memory: 256Mi
+  #    cpu: 0.5
+  #  requests:
+  #    memory: 128Mi
+  #    cpu: 0.1
+
+  #openshiftOAuthProxy:
+  #  enabled: true
+  #  port: 8080
+  #  secretName: "openshift-oauth-proxy-tls"
+
+  # Add additional containers besides init and app containers
+  #additionalContainers:
+  #- name: sidecar-contaner
+  #  image: busybox
+  #  imagePullPolicy: IfNotPresent
+  #  command: ['/bin/sh']
+
+  # Security Context for the pod
+  securityContext:
+    # fsGroup: 2000
+
+  # Command for primary container
+  command: []
+
+  # Args for primary contaner
+  args: []
+
+  # List of ports for the primary container
+  ports:
+  - containerPort: 3002
+    name: http
+    protocol: TCP
+
+# Add Storage volumes to the pods
+#persistence:
+#  enabled: true
+#  mountPVC: false
+#  mountPath: "/"
+#  accessMode: ReadWriteOnce
+  ## If defined, storageClass: <storageClass>
+  ## If set to "-", storageClass: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClass spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+#  storageClass: "-"
+#  additionalLabels:
+#    key: "value"
+
+#  annotations:
+  #  "helm.sh/resource-policy": keep
+#  storageSize: 8Gi
+
+# Service object for servicing pods
+service:
+  annotations:
+    config.xposer.stakater.com/Domain: stakater.com
+    config.xposer.stakater.com/IngressNameTemplate: '{{ "{{.Service}}-{{.Namespace}}" }}'
+    config.xposer.stakater.com/IngressURLPath: /
+    config.xposer.stakater.com/IngressURLTemplate: '{{ "{{.Service}}.{{.Namespace}}.{{.Domain}}" }}'
+    service.alpha.openshift.io/serving-cert-secret-name: |
+      '{{ template "application.name" . }}-tls'
+    xposer.stakater.com/annotations: |-
+      kubernetes.io/ingress.class: alb
+      ingress.kubernetes.io/rewrite-target: /
+      ingress.kubernetes.io/force-ssl-redirect: "true"
+
+  ports:
+    - port: 3002
+      name: http
+      protocol: TCP
+      targetPort: 3002
+
+# --------------------------
+# Ingress
+# --------------------------
+ingress:
+  enabled: true
+
+  # Port of the service that serves pods
+  servicePort: http
+
+  # Set pathType: default is ImplementationSpecific; Options: Exact, Prefix
+  pathType: ImplementationSpecific
+
+  # List of host addresses to be exposed by this Ingress
+  hosts:
+    - fileserver.entalgo.dev.cloudpanda.io
+
+  # Add annotations to this Ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: 'ip'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: ingress
+    alb.ingress.kubernetes.io/group.order: '5'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+
+# --------------------------
+# Role Based Access Control
+# --------------------------
+rbac:
+  enabled: true
+
+  # Service Account to use by pods
+  serviceAccount:
+    enabled: true
+    name: ""

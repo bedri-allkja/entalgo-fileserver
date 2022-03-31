@@ -16,6 +16,9 @@ COPY . .
 
 RUN npm run build
 
+RUN mkdir /home/entalgo-fileserver/config
+RUN ln -s /home/entalgo-fileserver/fileserver-config/config.json /home/entalgo-fileserver/config/config.json
+
 EXPOSE 3002
 
 CMD npm run watch:fileserver
